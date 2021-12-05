@@ -17,8 +17,15 @@ while True:
     kr, kc = [int(i) for i in input().split()]
     print(f"Rick is ({kr}, {kc})", file=sys.stderr)
 
+    # maze: 迷路list
+    maze = []
+    print(f"maze map = ", file=sys.stderr)
+
+    # update and print maze
     for i in range(r):
         row = input()  # C of the characters in '#.TC?' (i.e. one line of the ASCII maze).
+        maze.append(row)
+
         print(f"{row}", file=sys.stderr)
     print("", file=sys.stderr)
 
