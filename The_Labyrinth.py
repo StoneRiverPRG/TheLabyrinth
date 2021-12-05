@@ -4,11 +4,50 @@ import math
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 
+# change direction, string to numeric
+# e.g. "UP" to (-1, 0)
+def ChangeDirtoNum(dir):
+    direction = ["UP", "RIGHT", "DOWN", "LEFT"]
+    change_dir = (0, 0)
+    if dir not in direction:
+        print(f"error! dir:{dir} is not dir string.", file=sys.stderr)
+        return (-1, -1)
+
+    if dir == "UP":
+        change_dir = (-1, 0)
+    elif dir == "RIGHT":
+        change_dir = (0, 1)
+    elif dir == "DOWN":
+        change_dir = (1, 0)
+    elif dir == "LEFT":
+        change_dir = (0, -1)
+    else:
+        print("something error ChangeDirtoNum", file=sys.stderr)
+
+    return change_dir
+
+
+# now: rick's coordinate tuple (r, c)
+# maze: list of map of maze. 2 x 2 list
+# check neighbor coordinate and return valid coordinate (tuples) list
+def ReturnNeighborList(now, maze):
+    # movable: list of (row, column) coordinate (numerical) tuples
+    movable = []
+    direction = ["UP", "RIGHT", "DOWN", "LEFT"]
+    r = now[0]
+    c = now[1]
+
+    return movable
+
+
 # r: number of rows.
 # c: number of columns.
 # a: number of rounds between the time the alarm countdown is activated and the time the alarm goes off.
 r, c, a = [int(i) for i in input().split()]
 print(f"row, column, alarm = {r}, {c}, {a}", file=sys.stderr)
+
+# fuel: max energy
+fuel = 1200
 
 CONTROL = False
 # game loop
