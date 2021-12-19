@@ -26,6 +26,28 @@ def ChangeDirtoNum(dir):
 
     return change_dir
 
+# change direction num (r, c) tuble to string eg. "UP"
+# numdir: tuple of coordinate eg. (6, 8)
+def ChangeDirtoStr(numdir):
+    if len(numdir) != 2:
+        return "error"
+
+    strdir = ""
+    _r = numdir[0]
+    _c = numdir[1]
+
+    if _r == 0:
+        if _c == 1:
+            strdir = "UP"
+        elif _c == -1:
+            strdir = "DOWN"
+    elif _c == 0:
+        if _r == 1:
+            strdir = "RIGHT"
+        elif _r == -1:
+            strdir = "LEFT"
+
+    return strdir
 
 # now: rick's coordinate tuple (r, c)
 # maze: list of map of maze. 2 x 2 list
