@@ -37,6 +37,13 @@ def ReturnNeighborList(now, maze):
     r = now[0]
     c = now[1]
 
+    for strdir in direction:
+        dir = ChangeDirtoNum(strdir)
+        if maze[r + dir[0]][c + dir[1]] == "." or \
+           maze[r + dir[0]][c + dir[1]] == "C" or \
+           maze[r + dir[0]][c + dir[1]] == "T":
+            movable.append((r + dir[0], c + dir[1]))
+
     return movable
 
 
@@ -46,10 +53,11 @@ def ReturnNeighborList(now, maze):
 r, c, a = [int(i) for i in input().split()]
 print(f"row, column, alarm = {r}, {c}, {a}", file=sys.stderr)
 
-# fuel: max energy
-fuel = 1200
+# FUEL: max energy
+FUEL = 1200
 
 CONTROL = False
+
 # game loop
 while True:
     # kr: row where Rick is located.
@@ -74,6 +82,8 @@ while True:
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
     # Rick's next move (UP DOWN LEFT or RIGHT).
+    print("Movable List = ", ReturnNeighborList((kr, kc), maze), file=sys.stderr)
+
     if (maze[kr][kc + 1] == "." or maze[kr][kc + 1] == "C") and CONTROL == False:
         print("RIGHT")
 
