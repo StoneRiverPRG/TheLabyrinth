@@ -27,7 +27,7 @@ def ChangeDirtoNum(dir):
     return change_dir
 
 # change direction num (r, c) tuble to string eg. "UP"
-# numdir: tuple of coordinate eg. (6, 8)
+# numdir: tuple of coordinate eg. (0, 1)
 def ChangeDirtoStr(numdir):
     if len(numdir) != 2:
         return "error"
@@ -38,14 +38,14 @@ def ChangeDirtoStr(numdir):
 
     if _r == 0:
         if _c == 1:
-            strdir = "UP"
+            strdir = "RIGHT"
         elif _c == -1:
-            strdir = "DOWN"
+            strdir = "LEFT"
     elif _c == 0:
         if _r == 1:
-            strdir = "RIGHT"
+            strdir = "DOWN"
         elif _r == -1:
-            strdir = "LEFT"
+            strdir = "UP"
 
     return strdir
 
@@ -79,12 +79,21 @@ print(f"row, column, alarm = {r}, {c}, {a}", file=sys.stderr)
 FUEL = 1200
 
 CONTROL = False
+START = (-1, -1)
+CTRL = (-1, -1)
+GOAL = (-1, -1)
+
+close_list = []
 
 # game loop
 while True:
     # kr: row where Rick is located.
     # kc: column where Rick is located.
     kr, kc = [int(i) for i in input().split()]
+
+    # set start coordinate (kr, kc) . start means "T".
+    if START == (-1, -1):
+        START = (kr, kc)
     print(f"Rick is ({kr}, {kc})", file=sys.stderr)
 
     # maze: 迷路list
@@ -95,23 +104,47 @@ while True:
     for i in range(r):
         row = input()  # C of the characters in '#.TC?' (i.e. one line of the ASCII maze).
         maze.append(row)
-
         print(f"{row}", file=sys.stderr)
+
     print("", file=sys.stderr)
 
+    if CTRL == (-1, -1):
+        for i, row in enumerate(maze):
+            if CTRL != (-1, -1):
+                break
+            for j, s in enumerate(row):
+                if s == "C":
+                    CTRL = (i, j)
+                    print("Control room found!", file=sys.stderr)
+                    break
+    if (kr, kc) == CTRL:
+        close_list = []
+        GOAL = START
 
     # Write an action using print
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
     # Rick's next move (UP DOWN LEFT or RIGHT).
-    print("Movable List = ", ReturnNeighborList((kr, kc), maze), file=sys.stderr)
+    movable_list = ReturnNeighborList((kr, kc), maze)
+    close_list.append((kr, kc))
+    print("Movable List = ", movable_list, file=sys.stderr)
+    print("Close List = ", close_list, file=sys.stderr)
 
-    if (maze[kr][kc + 1] == "." or maze[kr][kc + 1] == "C") and CONTROL == False:
-        print("RIGHT")
+    max = 0
+    max_coord = (-1, -1)
+    evalue = 0
+    temp = 0
 
-    if maze[kr][kc] == "C":
-        CONTROL = True
-        print("LEFT")
+    for coord in movable_list:
+        if coord in close_list:
+            continue
+        temp = len(ReturnNeighborList(coord, maze))
+        if temp > max:
+            max = temp
+            max_coord = coord
+    print(f"estimation, go to {max_coord}", file=sys.stderr)
 
-    if CONTROL == True:
-        print("LEFT")
+    goto = (max_coord[0] - kr, max_coord[1] - kc)
+    print(f"goto = {goto}", file=sys.stderr)
+    print(ChangeDirtoStr(goto))
+
