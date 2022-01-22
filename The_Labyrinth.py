@@ -117,7 +117,7 @@ def astar(maze, start, end, allow_diagonal_movement = False):
                 continue
 
             # Make sure walkable terrain
-            if maze[node_position[0]][node_position[1]] == "#":
+            if maze[node_position[0]][node_position[1]] in ["#", "?"]:
                 continue
 
             # Create new node
@@ -215,19 +215,19 @@ def ChangeDirtoStr(numdir):
 # now: rick's coordinate tuple (r, c)
 # maze: list of map of maze. 2 x 2 list
 # check neighbor coordinate and return valid coordinate (tuples) list
-def ReturnNeighborList(now, maze):
+def ReturnNeighborList(now, maze, goal=False):
     # movable: list of (row, column) coordinate (numerical) tuples
     movable = []
     direction = ["UP", "RIGHT", "DOWN", "LEFT"]
     r = now[0]
     c = now[1]
+    char = [".", "C", "?", "T"]
+    if goal:
+        char = [".", "C", "T"]
 
     for strdir in direction:
         dir = ChangeDirtoNum(strdir)
-        if maze[r + dir[0]][c + dir[1]] == "." or \
-           maze[r + dir[0]][c + dir[1]] == "C" or \
-           maze[r + dir[0]][c + dir[1]] == "?" or \
-           maze[r + dir[0]][c + dir[1]] == "T":
+        if maze[r + dir[0]][c + dir[1]] in char:
             movable.append((r + dir[0], c + dir[1]))
 
     return movable
@@ -297,7 +297,7 @@ while True:
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
     # Rick's next move (UP DOWN LEFT or RIGHT).
-    movable_list = ReturnNeighborList(NOW, maze)
+    movable_list = ReturnNeighborList(NOW, maze, ASTAR)
     close_list.append(NOW)
     print("Movable List = ", movable_list, file=sys.stderr)
     print("Close List = ", close_list, file=sys.stderr)
@@ -306,11 +306,19 @@ while True:
     max_coord = (-1, -1)
     evalue = 0
     temp = 0
+    temp_list = []
+
+    for li in movable_list:
+        if not li in close_list:
+            temp_list.append(li)
+
+    if not temp_list:
+        close_list = []
 
     for coord in movable_list:
         if coord in close_list:
             continue
-        temp = len(ReturnNeighborList(coord, maze))
+        temp = len(ReturnNeighborList(coord, maze, ASTAR))
 
         if temp > max:
             max = temp
